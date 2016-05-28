@@ -2,18 +2,18 @@
 <resources>
 
 	<!-- Custom -->
-	<string name="app_name">Linphone</string>
-	<string name="service_name">Linphone Service</string>
+	<string name="app_name">语信</string>
+	<string name="service_name">语信</string>
 	<string name="addressbook_label">Linphone</string>
-	<string name="notification_title">Linphone</string>
-	<string name="wait_dialog_text">Starting up</string>
-	<string name="notification_registered">%s registered</string>
-	<string name="notification_register_failure">%s failed to register</string>
+	<string name="notification_title">语信</string>
+	<string name="wait_dialog_text">启动</string>
+	<string name="notification_registered">%s 注册成功</string>
+	<string name="notification_register_failure">%s 注册失败</string>
 	<string name="tunnel_host"></string>
-	<string name="about_version">Linphone Android %s</string>
+	<string name="about_version">语信Android %s</string>
 	<string name="about_liblinphone_version">Linphone Core %s</string>
 	<string name="about_text">GNU General Public License V2\n © 2010-2016 Belledonne Communications</string>
-	<string name="about_link">www.linphone.org</string>
+	<string name="about_link">www.vlab.org</string>
 	<string name="sync_account_name">linphone contacts</string>
 	<string name="history_date_format">EEE, d MMM</string>
 	<string name="history_detail_date_format">yyyy/MM/dd - HH:mm - </string>
@@ -23,33 +23,33 @@
 	<string name="picture_name_format">linphone-mms-%s.jpg</string>
 
 	<!-- Common -->
-	<string name="username">Username</string>
-	<string name="display_name">Display name</string>
-	<string name="password">Password</string>
-	<string name="confirm_password">Password confirmation</string>
-	<string name="domain">Domain</string>
+	<string name="username">用户名</string>
+	<string name="display_name">显示名称</string>
+	<string name="password">密码</string>
+	<string name="confirm_password">确认密码</string>
+	<string name="domain">域</string>
 	<string name="remote_provisioning_url">URL</string>
-	<string name="email">Email</string>
+	<string name="email">邮箱</string>
 	<string name="delete_text">Are you sure you want to delete your selection?</string>
-	<string name="delete">Delete</string>
-	<string name="retry">Retry</string>
-	<string name="cancel">Cancel</string>
-	<string name="accept">Accept</string>
-	<string name="continue_text">Continue</string>
-	<string name="about">About</string>
-	<string name="deny">Deny</string>
+	<string name="delete">删除</string>
+	<string name="retry">重试</string>
+	<string name="cancel">取消</string>
+	<string name="accept">接受</string>
+	<string name="continue_text">继续</string>
+	<string name="about">关于</string>
+	<string name="deny">拒绝</string>
 	<string name="no_account">No account configured</string>
-	<string name="search">Search</string>
-	<string name="outgoing">Outgoing</string>
-	<string name="incoming">Incoming</string>
-	<string name="missed">Missed</string>
-	<string name="settings">Settings</string>
-	<string name="connect">Connection</string>
-	<string name="decline">Decline</string>
-	<string name="conference">Conference</string>
+	<string name="search">查找</string>
+	<string name="outgoing">呼出</string>
+	<string name="incoming">呼入</string>
+	<string name="missed">未接来电</string>
+	<string name="settings">设置</string>
+	<string name="connect">连接</string>
+	<string name="decline">拒绝</string>
+	<string name="conference">会议</string>
 
 	<!-- Launch screen -->
-	<string name="app_description">the <i>libre</i> SIP client</string>
+	<string name="app_description">语信SIP客户端</string>
 
 	<!-- Assistant -->
 	<string name="welcome">Welcome</string>
