@@ -20,7 +20,6 @@ package org.linphone;
 
 import static android.content.Intent.ACTION_MAIN;
 
-import org.linphone.mediastream.Log;
 import org.linphone.assistant.RemoteProvisioningActivity;
 import org.linphone.tutorials.TutorialLauncherActivity;
 
@@ -35,68 +34,92 @@ import android.os.Handler;
  * Launch Linphone main activity when Service is ready.
  * 
  * @author Guillaume Beraudo
- *
+ * 
  */
-public class LinphoneLauncherActivity extends Activity {
+public class LinphoneLauncherActivity extends Activity
+{
 
 	private Handler mHandler;
 	private ServiceWaitThread mThread;
 
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
+	protected void onCreate(Bundle savedInstanceState)
+	{
 		super.onCreate(savedInstanceState);
-		
+
 		// Hack to avoid to draw twice LinphoneActivity on tablets
-        if (getResources().getBoolean(R.bool.orientation_portrait_only)) {
+		if (getResources().getBoolean(R.bool.orientation_portrait_only))
+		{
 			setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 		}
 		setContentView(R.layout.launch_screen);
-        
+
 		mHandler = new Handler();
-		
-		if (LinphoneService.isReady()) {
+
+		if (LinphoneService.isReady())
+		{
 			onServiceReady();
-		} else {
-			// start linphone as background  
-			startService(new Intent(ACTION_MAIN).setClass(this, LinphoneService.class));
+		} else
+		{
+			// start linphone as background
+			startService(new Intent(ACTION_MAIN).setClass(this,
+					LinphoneService.class));
 			mThread = new ServiceWaitThread();
 			mThread.start();
 		}
 	}
 
-	protected void onServiceReady() {
+	protected void onServiceReady()
+	{
 		final Class<? extends Activity> classToStart;
-		if (getResources().getBoolean(R.bool.show_tutorials_instead_of_app)) {
+		if (getResources().getBoolean(R.bool.show_tutorials_instead_of_app))
+		{
 			classToStart = TutorialLauncherActivity.class;
-		} else if (getResources().getBoolean(R.bool.display_sms_remote_provisioning_activity) && LinphonePreferences.instance().isFirstRemoteProvisioning()) {
+		} else if (getResources().getBoolean(
+				R.bool.display_sms_remote_provisioning_activity)
+				&& LinphonePreferences.instance().isFirstRemoteProvisioning())
+		{
 			classToStart = RemoteProvisioningActivity.class;
-		} else {
+		} else
+		{
 			classToStart = LinphoneActivity.class;
 		}
-		
-		LinphoneService.instance().setActivityToLaunchOnIncomingReceived(classToStart);
-		mHandler.postDelayed(new Runnable() {
+
+		LinphoneService.instance().setActivityToLaunchOnIncomingReceived(
+				classToStart);
+		mHandler.postDelayed(new Runnable()
+		{
 			@Override
-			public void run() {
-				startActivity(new Intent().setClass(LinphoneLauncherActivity.this, classToStart).setData(getIntent().getData()));
+			public void run()
+			{
+				startActivity(new Intent().setClass(
+						LinphoneLauncherActivity.this, classToStart).setData(
+						getIntent().getData()));
 				finish();
 			}
 		}, 1000);
 	}
 
-
-	private class ServiceWaitThread extends Thread {
-		public void run() {
-			while (!LinphoneService.isReady()) {
-				try {
+	private class ServiceWaitThread extends Thread
+	{
+		public void run()
+		{
+			while (!LinphoneService.isReady())
+			{
+				try
+				{
 					sleep(30);
-				} catch (InterruptedException e) {
-					throw new RuntimeException("waiting thread sleep() has been interrupted");
+				} catch (InterruptedException e)
+				{
+					throw new RuntimeException(
+							"waiting thread sleep() has been interrupted");
 				}
 			}
-			mHandler.post(new Runnable() {
+			mHandler.post(new Runnable()
+			{
 				@Override
-				public void run() {
+				public void run()
+				{
 					onServiceReady();
 				}
 			});
@@ -104,5 +127,3 @@ public class LinphoneLauncherActivity extends Activity {
 		}
 	}
 }
-
-
