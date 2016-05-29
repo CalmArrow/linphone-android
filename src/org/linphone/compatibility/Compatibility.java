@@ -43,6 +43,7 @@ import android.view.ViewTreeObserver.OnGlobalLayoutListener;
 /**
  * @author Sylvain Berfini
  */
+@SuppressWarnings("deprecation")
 public class Compatibility {
 	public static void overridePendingTransition(Activity activity, int idAnimIn, int idAnimOut) {
 		if (Version.sdkAboveOrEqual(Version.API05_ECLAIR_20)) {
