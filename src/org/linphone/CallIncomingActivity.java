@@ -15,7 +15,7 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
-*/
+ */
 package org.linphone;
 
 import java.util.List;
@@ -29,6 +29,7 @@ import org.linphone.core.LinphoneCoreListenerBase;
 import org.linphone.mediastream.Log;
 import org.linphone.ui.LinphoneSliders.LinphoneSliderTriggered;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
 import android.content.pm.ActivityInfo;
@@ -44,7 +45,10 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class CallIncomingActivity extends Activity implements LinphoneSliderTriggered {
+@TargetApi(Build.VERSION_CODES.KITKAT_WATCH)
+public class CallIncomingActivity extends Activity implements
+		LinphoneSliderTriggered
+{
 
 	private static CallIncomingActivity instance;
 
@@ -58,19 +62,24 @@ public class CallIncomingActivity extends Activity implements LinphoneSliderTrig
 	private float answerX;
 	private float declineX;
 
-	public static CallIncomingActivity instance() {
+	public static CallIncomingActivity instance()
+	{
 		return instance;
 	}
 
-	public static boolean isInstanciated() {
+	public static boolean isInstanciated()
+	{
 		return instance != null;
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
+	protected void onCreate(Bundle savedInstanceState)
+	{
 		super.onCreate(savedInstanceState);
-		
-		if (getResources().getBoolean(R.bool.orientation_portrait_only)) {
+
+		if (getResources().getBoolean(R.bool.orientation_portrait_only))
+		{
 			setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 		}
 
@@ -82,13 +91,17 @@ public class CallIncomingActivity extends Activity implements LinphoneSliderTrig
 		contactPicture = (ImageView) findViewById(R.id.contact_picture);
 
 		// set this flag so this activity will stay in front of the keyguard
-		int flags = WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED | WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD | WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON;
+		int flags = WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED
+				| WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD
+				| WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON;
 		getWindow().addFlags(flags);
 
 		PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT_WATCH) {
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT_WATCH)
+		{
 			isActive = pm.isInteractive();
-		} else {
+		} else
+		{
 			isActive = pm.isScreenOn();
 		}
 
@@ -99,74 +112,89 @@ public class CallIncomingActivity extends Activity implements LinphoneSliderTrig
 
 		accept = (ImageView) findViewById(R.id.accept);
 		decline = (ImageView) findViewById(R.id.decline);
-		accept.setOnClickListener(new View.OnClickListener() {
+		accept.setOnClickListener(new View.OnClickListener()
+		{
 			@Override
-			public void onClick(View v) {
-				if(isActive) {
+			public void onClick(View v)
+			{
+				if (isActive)
+				{
 					answer();
-				} else {
+				} else
+				{
 					decline.setVisibility(View.GONE);
 					acceptUnlock.setVisibility(View.VISIBLE);
 				}
 			}
 		});
 
-		if(!isActive) {
-			accept.setOnTouchListener(new View.OnTouchListener() {
+		if (!isActive)
+		{
+			accept.setOnTouchListener(new View.OnTouchListener()
+			{
 				@Override
-				public boolean onTouch(View view, MotionEvent motionEvent) {
+				public boolean onTouch(View view, MotionEvent motionEvent)
+				{
 					float curX;
-					switch (motionEvent.getAction()) {
-						case MotionEvent.ACTION_DOWN:
-							acceptUnlock.setVisibility(View.VISIBLE);
-							decline.setVisibility(View.GONE);
-							answerX = motionEvent.getX();
-							break;
-						case MotionEvent.ACTION_MOVE:
-							curX = motionEvent.getX();
-							if((answerX - curX) >= 0)
-								view.scrollBy((int) (answerX - curX), view.getScrollY());
-							answerX = curX;
-							if (curX < screenWidth/4) {
-								answer();
-								return true;
-							}
-							break;
-						case MotionEvent.ACTION_UP:
-							view.scrollTo(0, view.getScrollY());
-							decline.setVisibility(View.VISIBLE);
-							acceptUnlock.setVisibility(View.GONE);
-							break;
+					switch (motionEvent.getAction())
+					{
+					case MotionEvent.ACTION_DOWN:
+						acceptUnlock.setVisibility(View.VISIBLE);
+						decline.setVisibility(View.GONE);
+						answerX = motionEvent.getX();
+						break;
+					case MotionEvent.ACTION_MOVE:
+						curX = motionEvent.getX();
+						if ((answerX - curX) >= 0)
+							view.scrollBy((int) (answerX - curX),
+									view.getScrollY());
+						answerX = curX;
+						if (curX < screenWidth / 4)
+						{
+							answer();
+							return true;
+						}
+						break;
+					case MotionEvent.ACTION_UP:
+						view.scrollTo(0, view.getScrollY());
+						decline.setVisibility(View.VISIBLE);
+						acceptUnlock.setVisibility(View.GONE);
+						break;
 					}
 					return true;
 				}
 			});
 
-			decline.setOnTouchListener(new View.OnTouchListener() {
+			decline.setOnTouchListener(new View.OnTouchListener()
+			{
 				@Override
-				public boolean onTouch(View view, MotionEvent motionEvent) {
+				public boolean onTouch(View view, MotionEvent motionEvent)
+				{
 					float curX;
-					switch (motionEvent.getAction()) {
-						case MotionEvent.ACTION_DOWN:
-							declineUnlock.setVisibility(View.VISIBLE);
-							accept.setVisibility(View.GONE);
-							declineX = motionEvent.getX();
-							break;
-						case MotionEvent.ACTION_MOVE:
-							curX = motionEvent.getX();
-							view.scrollBy((int) (declineX - curX), view.getScrollY());
-							declineX = curX;
-							Log.w(curX);
-							if (curX > (screenWidth/2)){
-								decline();
-								return true;
-							}
-							break;
-						case MotionEvent.ACTION_UP:
-							view.scrollTo(0, view.getScrollY());
-							accept.setVisibility(View.VISIBLE);
-							declineUnlock.setVisibility(View.GONE);
-							break;
+					switch (motionEvent.getAction())
+					{
+					case MotionEvent.ACTION_DOWN:
+						declineUnlock.setVisibility(View.VISIBLE);
+						accept.setVisibility(View.GONE);
+						declineX = motionEvent.getX();
+						break;
+					case MotionEvent.ACTION_MOVE:
+						curX = motionEvent.getX();
+						view.scrollBy((int) (declineX - curX),
+								view.getScrollY());
+						declineX = curX;
+						Log.w(curX);
+						if (curX > (screenWidth / 2))
+						{
+							decline();
+							return true;
+						}
+						break;
+					case MotionEvent.ACTION_UP:
+						view.scrollTo(0, view.getScrollY());
+						accept.setVisibility(View.VISIBLE);
+						declineUnlock.setVisibility(View.GONE);
+						break;
 
 					}
 					return true;
@@ -174,137 +202,181 @@ public class CallIncomingActivity extends Activity implements LinphoneSliderTrig
 			});
 		}
 
-		decline.setOnClickListener(new View.OnClickListener() {
+		decline.setOnClickListener(new View.OnClickListener()
+		{
 			@Override
-			public void onClick(View v) {
-				if(isActive) {
+			public void onClick(View v)
+			{
+				if (isActive)
+				{
 					decline();
-				} else {
+				} else
+				{
 					accept.setVisibility(View.GONE);
 					acceptUnlock.setVisibility(View.VISIBLE);
 				}
 			}
 		});
 
-
-
-
-		mListener = new LinphoneCoreListenerBase(){
+		mListener = new LinphoneCoreListenerBase()
+		{
 			@Override
-			public void callState(LinphoneCore lc, LinphoneCall call, State state, String message) {
-				if (call == mCall && State.CallEnd == state) {
+			public void callState(LinphoneCore lc, LinphoneCall call,
+					State state, String message)
+			{
+				if (call == mCall && State.CallEnd == state)
+				{
 					finish();
 				}
-				if (state == State.StreamsRunning) {
-					// The following should not be needed except some devices need it (e.g. Galaxy S).
-					LinphoneManager.getLc().enableSpeaker(LinphoneManager.getLc().isSpeakerEnabled());
+				if (state == State.StreamsRunning)
+				{
+					// The following should not be needed except some devices
+					// need it (e.g. Galaxy S).
+					LinphoneManager.getLc().enableSpeaker(
+							LinphoneManager.getLc().isSpeakerEnabled());
 				}
 			}
 		};
-
 
 		super.onCreate(savedInstanceState);
 		instance = this;
 	}
 
 	@Override
-	protected void onResume() {
+	protected void onResume()
+	{
 		super.onResume();
 		instance = this;
 		LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
-		if (lc != null) {
+		if (lc != null)
+		{
 			lc.addListener(mListener);
 		}
 
 		// Only one call ringing at a time is allowed
-		if (LinphoneManager.getLcIfManagerNotDestroyedOrNull() != null) {
-			List<LinphoneCall> calls = LinphoneUtils.getLinphoneCalls(LinphoneManager.getLc());
-			for (LinphoneCall call : calls) {
-				if (State.IncomingReceived == call.getState()) {
+		if (LinphoneManager.getLcIfManagerNotDestroyedOrNull() != null)
+		{
+			List<LinphoneCall> calls = LinphoneUtils
+					.getLinphoneCalls(LinphoneManager.getLc());
+			for (LinphoneCall call : calls)
+			{
+				if (State.IncomingReceived == call.getState())
+				{
 					mCall = call;
 					break;
 				}
 			}
 		}
-		if (mCall == null) {
+		if (mCall == null)
+		{
 			Log.e("Couldn't find incoming call");
 			finish();
 			return;
 		}
 		LinphoneAddress address = mCall.getRemoteAddress();
-		LinphoneContact contact = ContactsManager.getInstance().findContactFromAddress(address);
-		if (contact != null) {
-			LinphoneUtils.setImagePictureFromUri(this, contactPicture, contact.getPhotoUri(), contact.getThumbnailUri());
+		LinphoneContact contact = ContactsManager.getInstance()
+				.findContactFromAddress(address);
+		if (contact != null)
+		{
+			LinphoneUtils.setImagePictureFromUri(this, contactPicture,
+					contact.getPhotoUri(), contact.getThumbnailUri());
 			name.setText(contact.getFullName());
-		} else {
+		} else
+		{
 			name.setText(LinphoneUtils.getAddressDisplayName(address));
 		}
 		number.setText(address.asStringUriOnly());
 	}
 
 	@Override
-	protected void onPause() {
+	protected void onPause()
+	{
 		LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
-		if (lc != null) {
+		if (lc != null)
+		{
 			lc.removeListener(mListener);
 		}
 		super.onPause();
 	}
 
 	@Override
-	protected void onDestroy() {
+	protected void onDestroy()
+	{
 		super.onDestroy();
 		instance = null;
 	}
 
 	@Override
-	public boolean onKeyDown(int keyCode, KeyEvent event) {
-		if (LinphoneManager.isInstanciated() && (keyCode == KeyEvent.KEYCODE_BACK || keyCode == KeyEvent.KEYCODE_HOME)) {
+	public boolean onKeyDown(int keyCode, KeyEvent event)
+	{
+		if (LinphoneManager.isInstanciated()
+				&& (keyCode == KeyEvent.KEYCODE_BACK || keyCode == KeyEvent.KEYCODE_HOME))
+		{
 			LinphoneManager.getLc().terminateCall(mCall);
 			finish();
 		}
 		return super.onKeyDown(keyCode, event);
 	}
 
-	private void decline() {
+	private void decline()
+	{
 		LinphoneManager.getLc().terminateCall(mCall);
 		finish();
 	}
 
-	private void answer() {
-		LinphoneCallParams params = LinphoneManager.getLc().createCallParams(mCall);
+	private void answer()
+	{
+		LinphoneCallParams params = LinphoneManager.getLc().createCallParams(
+				mCall);
 
-		boolean isLowBandwidthConnection = !LinphoneUtils.isHighBandwidthConnection(LinphoneService.instance().getApplicationContext());
+		boolean isLowBandwidthConnection = !LinphoneUtils
+				.isHighBandwidthConnection(LinphoneService.instance()
+						.getApplicationContext());
 
-		if (params != null) {
+		if (params != null)
+		{
 			params.enableLowBandwidth(isLowBandwidthConnection);
-		}else {
+		} else
+		{
 			Log.e("Could not create call params for call");
 		}
 
-		if (params == null || !LinphoneManager.getInstance().acceptCallWithParams(mCall, params)) {
+		if (params == null
+				|| !LinphoneManager.getInstance().acceptCallWithParams(mCall,
+						params))
+		{
 			// the above method takes care of Samsung Galaxy S
-			Toast.makeText(this, R.string.couldnt_accept_call, Toast.LENGTH_LONG).show();
-		} else {
-			if (!LinphoneActivity.isInstanciated()) {
+			Toast.makeText(this, R.string.couldnt_accept_call,
+					Toast.LENGTH_LONG).show();
+		} else
+		{
+			if (!LinphoneActivity.isInstanciated())
+			{
 				return;
 			}
 			final LinphoneCallParams remoteParams = mCall.getRemoteParams();
-			if (remoteParams != null && remoteParams.getVideoEnabled() && LinphonePreferences.instance().shouldAutomaticallyAcceptVideoRequests()) {
+			if (remoteParams != null
+					&& remoteParams.getVideoEnabled()
+					&& LinphonePreferences.instance()
+							.shouldAutomaticallyAcceptVideoRequests())
+			{
 				LinphoneActivity.instance().startVideoActivity(mCall);
-			} else {
+			} else
+			{
 				LinphoneActivity.instance().startIncallActivity(mCall);
 			}
 		}
 	}
 
 	@Override
-	public void onLeftHandleTriggered() {
+	public void onLeftHandleTriggered()
+	{
 
 	}
 
 	@Override
-	public void onRightHandleTriggered() {
+	public void onRightHandleTriggered()
+	{
 
 	}
 }
