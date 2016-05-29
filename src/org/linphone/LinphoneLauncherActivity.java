@@ -75,12 +75,14 @@ public class LinphoneLauncherActivity extends Activity
 		if (getResources().getBoolean(R.bool.show_tutorials_instead_of_app))
 		{
 			classToStart = TutorialLauncherActivity.class;
-		} else if (getResources().getBoolean(
-				R.bool.display_sms_remote_provisioning_activity)
-				&& LinphonePreferences.instance().isFirstRemoteProvisioning())
+		} 
+		else if (getResources().getBoolean(
+				R.bool.display_sms_remote_provisioning_activity) && 
+				LinphonePreferences.instance().isFirstRemoteProvisioning())
 		{
 			classToStart = RemoteProvisioningActivity.class;
-		} else
+		} 
+		else
 		{
 			classToStart = LinphoneActivity.class;
 		}

@@ -35,7 +35,6 @@
   <string name="decline">接続しない</string>
   <string name="conference">会談</string>
   <!--Launch screen-->
-  <string name="app_description">the <i>libre</i> SIP client</string>
   <!--Assistant-->
   <string name="welcome">ようこそ</string>
   <string name="assistant">アシスタント</string>

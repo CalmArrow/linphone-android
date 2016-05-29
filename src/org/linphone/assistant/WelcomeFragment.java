@@ -26,16 +26,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.Button;
 
 /**
  * @author Sylvain Berfini
  */
 public class WelcomeFragment extends Fragment implements OnClickListener
 {
+	/*
 	private Button createAccount, logLinphoneAccount, logGenericAccount,
 			remoteProvisioning;
-
+	*/
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState)
@@ -43,6 +43,8 @@ public class WelcomeFragment extends Fragment implements OnClickListener
 		View view = inflater.inflate(R.layout.assistant_welcome, container,
 				false);
 
+		AssistantActivity.instance().displayLoginGeneric();
+		/*
 		createAccount = (Button) view.findViewById(R.id.create_account);
 		createAccount.setOnClickListener(this);
 
@@ -74,6 +76,7 @@ public class WelcomeFragment extends Fragment implements OnClickListener
 		{
 			remoteProvisioning.setOnClickListener(this);
 		}
+		*/
 
 		return view;
 	}
